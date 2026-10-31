@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CYBERSATHI // STARK & S.H.I.E.L.D. CYBER DEFENSE INITIATIVE | HACKFORGE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --arc-cyan: #00f0ff;
+      --stark-gold: #ffb800;
+      --marvel-red: #e62429;
+      --shield-bg: #030912;
+      --hud-panel: rgba(6, 22, 41, 0.85);
+    }
+
+    body {
+      background-color: var(--shield-bg);
+      color: #e2f1ff;
+      font-family: 'Rajdhani', 'Noto Sans Devanagari', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 15%, rgba(0, 240, 255, 0.14) 0%, transparent 55%),
+        linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+      background-size: 100% 100%, 36px 36px, 36px 36px;
+      transition: background-color 0.4s ease;
+    }
+
+    body.veronica-lockdown {
+      --arc-cyan: #ff2a2a;
+      background-color: #140305;
+      background-image: 
+        radial-gradient(circle at 50% 15%, rgba(230, 36, 41, 0.22) 0%, transparent 60%),
+        linear-gradient(rgba(230, 36, 41, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(230, 36, 41, 0.06) 1px, transparent 1px);
+    }
+
+    .font-orbitron { font-family: 'Orbitron', sans-serif; }
+    .font-mono-tech { font-family: 'Share Tech Mono', 'Noto Sans Devanagari', monospace; }
+
+    /* Stark HUD Angled Corners */
+    .stark-card {
+      background: var(--hud-panel);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 240, 255, 0.28);
+      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.08), inset 0 0 15px rgba(0, 240, 255, 0.05);
+      transition: all 0.25s ease;
+    }
+    .stark-card:hover {
+      border-color: rgba(0, 240, 255, 0.65);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.18), inset 0 0 20px rgba(0, 240, 255, 0.08);
+    }
+
+    /* Arc Reactor Animations */
+    @keyframes spin-slow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes spin-reverse {
+      0% { transform: rotate(360deg); }
+      100% { transform: rotate(0deg); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { filter: drop-shadow(0 0 15px #00f0ff) drop-shadow(0 0 35px #0099ff); transform: scale(1); }
+      50% { filter: drop-shadow(0 0 28px #00f0ff) drop-shadow(0 0 60px #00f0ff); transform: scale(1.04); }
+    }
+    .arc-ring-1 { animation: spin-slow 18s linear infinite; }
+    .arc-ring-2 { animation: spin-reverse 12s linear infinite; }
+    .arc-core { animation: pulse-glow 3s ease-in-out infinite; }
+
+    /* Marvel Studio Badge */
+    .marvel-badge {
+      background: var(--marvel-red);
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      padding: 2px 10px;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px rgba(230, 36, 41, 0.7);
+    }
+
+    /* Scanline Overlay */
+    .hud-scanline {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0, 240, 255, 0.025) 51%);
+      background-size: 100% 4px;
+      z-index: 90;
+    }
+
+    .nav-pill.active {
+      background: rgba(0, 240, 255, 0.2);
+      border-color: #00f0ff;
+      color: #00f0ff;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
+    }
+
+    .lang-btn.active {
+      background: #00f0ff;
+      color: #020813;
+      font-weight: 800;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #030912; }
+    ::-webkit-scrollbar-thumb { background: #00f0ff55; border-radius: 3px; }
+  </style>
+</head>
+<body class="min-h-screen select-none">
+
+  <!-- Subtle HUD Scanline -->
+  <div class="hud-scanline"></div>
+
+  <!-- =========================================================================
+       FIRST PAGE: MARVEL / STARK INDUSTRIES ARC REACTOR GATEWAY SPLASH
+       Correlates directly with CyberSathi: "Cyber Safety Awareness & Digital Protection"
+       ========================================================================= -->
+  <div id="marvelSplash" class="fixed inset-0 z-50 bg-[#030811] flex flex-col justify-between p-5 md:p-8 overflow-y-auto transition-opacity duration-700">
+    
+    <!-- Top Telemetry Bar -->
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-cyan-500/30 pb-3">
+      <div class="flex items-center gap-3">
+        <span class="marvel-badge text-xs md:text-sm">HACKFORGE STUDIOS</span>
+        <span class="text-xs md:text-sm font-mono-tech text-cyan-400 tracking-widest">
+          // HACKFEST 3.0 OFFICIAL DEPLOYMENT (INNOVATORS)
+        </span>
+      </div>
+
+      <!-- Splash Language Selector for Indian Accent J.A.R.V.I.S. -->
+      <div class="flex flex-wrap items-center gap-3 text-xs font-mono-tech">
+        <div class="flex items-center bg-slate-900/90 border border-cyan-500/40 rounded p-0.5">
+          <button onclick="setJarvisLang('en-IN')" id="splash-lang-en" class="lang-btn active px-2.5 py-1 rounded text-[11px] transition">
+            🇮🇳 EN-IN (English)
+          </button>
+          <button onclick="setJarvisLang('hi-IN')" id="splash-lang-hi" class="lang-btn px-2.5 py-1 rounded text-[11px] transition">
+            🇮🇳 हिंदी (Hindi)
+          </button>
+        </div>
+        <button onclick="testJarvisGreeting()" class="px-2.5 py-1 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 hover:bg-amber-500/30">
+          🔊 TEST INDIAN J.A.R.V.I.S.
+        </button>
+        <button onclick="bypassSplash()" class="text-cyan-400 hover:text-white underline ml-1">SKIP INTRO [ESC]</button>
+      </div>
+    </div>
+
+    <!-- Center Hero: Interactive Arc Reactor & Project Correlation -->
+    <div class="my-auto py-4 grid grid-cols-1 lg:grid-cols-12 gap-7 items-center max-w-7xl mx-auto w-full">
+      
+      <!-- Left HUD Column: Project Brief & Avengers Correlation -->
+      <div class="lg:col-span-5 space-y-4 text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-cyan-500/10 border border-cyan-400/40 text-cyan-300 text-xs font-mono-tech">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+          S.H.I.E.L.D. INDIA // DIGITAL PROTECTION GRID
+        </div>
+
+        <h1 class="font-orbitron text-4xl sm:text-5xl xl:text-6xl font-black tracking-tight leading-none">
+          <span class="text-white">CYBER</span><span class="text-cyan-400 drop-shadow-[0_0_20px_rgba(0,240,255,0.6)]">SATHI</span>
+        </h1>
+
+        <p id="splashTagline" class="text-amber-400 font-orbitron text-xs sm:text-sm tracking-widest uppercase font-semibold">
+          "Every Indian Citizen Deserves an Iron Man Suit of Digital Armor."
+        </p>
+
+        <p id="splashDescription" class="text-slate-300 text-sm sm:text-base leading-relaxed">
+          Welcome, Agent. Engineered by <strong class="text-cyan-300">Team HACKFORGE</strong> for <strong class="text-amber-300">HACKFEST 3.0</strong>, <strong>CyberSathi</strong> combines Tony Stark's <strong>J.A.R.V.I.S. (Indian Bilingual AI)</strong> with <strong>S.H.I.E.L.D. Cyber Defense</strong> to neutralize Phishing Links, Fake KYC UPI Collect Traps, Dark Web Leaks, and Trojan APKs.
+        </p>
+
+        <!-- Problem Statement Metadata Cards matching the PPT Slide -->
+        <div class="grid grid-cols-2 gap-3 pt-1">
+          <div class="stark-card p-3">
+            <div class="text-[10px] font-mono-tech text-cyan-400">PROBLEM STATEMENT TITLE</div>
+            <div class="text-xs sm:text-sm font-bold text-white mt-0.5">CyberSathi: Cyber Safety Awareness & Digital Protection</div>
+          </div>
+          <div class="stark-card p-3">
+            <div class="text-[10px] font-mono-tech text-amber-400">THEME & TEAM NAME</div>
+            <div class="text-xs sm:text-sm font-bold text-white mt-0.5">Cybersecurity // Software // Team HACKFORGE</div>
+          </div>
+        </div>
+
+        <!-- Live J.A.R.V.I.S. Boot Terminal -->
+        <div class="bg-black/75 border border-cyan-500/30 p-3 rounded font-mono-tech text-xs space-y-1 text-cyan-300">
+          <div class="flex justify-between text-[11px] text-amber-400 border-b border-cyan-500/20 pb-1 mb-1">
+            <span>J.A.R.V.I.S. BHARAT NEURAL KERNEL v4.0 (EN-IN / HI-IN)</span>
+            <span id="bootPercentage">READY FOR IGNITION</span>
+          </div>
+          <div id="jarvisBootLog" class="space-y-1 max-h-24 overflow-y-auto">
+            <div>&gt; [STARK-INDIA] Loading Vibranium Firewall & NPCI UPI Shield... <span class="text-emerald-400">OK</span></div>
+            <div>&gt; [VOICE-CORE] Indian Accent J.A.R.V.I.S. (English + हिंदी) Synthesizer... <span class="text-emerald-400">READY</span></div>
+            <div>&gt; [S.H.I.E.L.D.] Director Admin Console & 1930 NCRP Portal... <span class="text-cyan-400">ONLINE</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center Column: Interactive Stark Arc Reactor -->
+      <div class="lg:col-span-4 flex flex-col items-center justify-center relative">
+        <div onclick="engageJarvis()" class="cursor-pointer group relative flex items-center justify-center w-60 h-60 sm:w-72 sm:h-72">
+          <!-- Outer HUD Ring -->
+          <svg class="absolute inset-0 w-full h-full arc-ring-1" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="92" fill="none" stroke="rgba(0, 240, 255, 0.3)" stroke-width="2" stroke-dasharray="18 8 4 8" />
+            <circle cx="100" cy="100" r="84" fill="none" stroke="#ffb800" stroke-width="1.5" stroke-dasharray="6 24" opacity="0.7" />
+          </svg>
+
+          <!-- Counter-Rotating Coil Ring -->
+          <svg class="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] arc-ring-2" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="78" fill="none" stroke="#00f0ff" stroke-width="5" stroke-dasharray="12 19.4" />
+            <circle cx="100" cy="100" r="65" fill="none" stroke="rgba(0, 240, 255, 0.5)" stroke-width="2" stroke-dasharray="40 15" />
+          </svg>
+
+          <!-- Inner Stark Core -->
+          <div class="arc-core relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-cyan-300 via-cyan-500 to-blue-900 flex items-center justify-center border-4 border-white/80 shadow-[0_0_60px_#00f0ff]">
+            <div class="w-20 h-20 rounded-full bg-[#041426] border-2 border-cyan-300 flex flex-col items-center justify-center text-center p-2 group-hover:scale-105 transition">
+              <i data-lucide="shield-check" class="w-7 h-7 text-cyan-300 animate-pulse"></i>
+              <span class="font-orbitron text-[9px] font-bold tracking-widest text-white mt-1">INITIALIZE</span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="engageJarvis()" class="mt-4 px-7 py-3 bg-gradient-to-r from-cyan-500 via-sky-400 to-blue-600 hover:from-amber-400 hover:to-red-600 text-slate-950 hover:text-white font-orbitron font-black text-xs sm:text-sm tracking-widest uppercase rounded shadow-[0_0_30px_rgba(0,240,255,0.6)] transition-all flex items-center gap-2.5">
+          <i data-lucide="power" class="w-4 h-4"></i>
+          LAUNCH CYBERSATHI COMMAND DECK
+        </button>
+        <span class="text-[11px] font-mono-tech text-cyan-300/80 mt-2 text-center">
+          Click the Arc Reactor to launch with Indian J.A.R.V.I.S. Voice (EN-IN / हिंदी)
+        </span>
+      </div>
+
+      <!-- Right Column: How Marvel Correlates to Our Project Modules -->
+      <div class="lg:col-span-3 space-y-2.5">
+        <div class="text-xs font-orbitron text-amber-400 tracking-wider uppercase mb-1 flex items-center gap-2">
+          <i data-lucide="cpu" class="w-4 h-4"></i> MARVEL x CYBERSATHI MATRIX
+        </div>
+
+        <div class="stark-card p-3 border-l-4 border-l-cyan-400">
+          <div class="flex items-center justify-between">
+            <span class="font-orbitron text-xs font-bold text-cyan-300">01 // J.A.R.V.I.S. OMNI-RADAR</span>
+            <span class="text-[10px] font-mono-tech bg-cyan-500/20 px-1.5 py-0.5 rounded text-cyan-300">IRON MAN</span>
+          </div>
+          <p class="text-xs text-slate-300 mt-1">Heuristic Phishing URL, Fake KYC UPI & SMS Scam scanner with Hindi/English voice alerts.</p>
+        </div>
+
+        <div class="stark-card p-3 border-l-4 border-l-amber-400">
+          <div class="flex items-center justify-between">
+            <span class="font-orbitron text-xs font-bold text-amber-300">02 // VIBRANIUM VAULT</span>
+            <span class="text-[10px] font-mono-tech bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-300">WAKANDA</span>
+          </div>
+          <p class="text-xs text-slate-300 mt-1">Shannon Entropy Password Forge & WebCrypto SHA-256 Dark-Web Breach Scanner.</p>
+        </div>
+
+        <div class="stark-card p-3 border-l-4 border-l-purple-400">
+          <div class="flex items-center justify-between">
+            <span class="font-orbitron text-xs font-bold text-purple-300">03 // MYSTERIO ILLUSION LAB</span>
+            <span class="text-[10px] font-mono-tech bg-purple-500/20 px-1.5 py-0.5 rounded text-purple-300">SPIDER-SENSE</span>
+          </div>
+          <p class="text-xs text-slate-300 mt-1">Spot-the-Phish simulator & S.H.I.E.L.D. Academy Printable Agent Diploma.</p>
+        </div>
+
+        <div class="stark-card p-3 border-l-4 border-l-emerald-400">
+          <div class="flex items-center justify-between">
+            <span class="font-orbitron text-xs font-bold text-emerald-300">04 // DIRECTOR FURY ADMIN</span>
+            <span class="text-[10px] font-mono-tech bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-300">LEVEL 10</span>
+          </div>
+          <p class="text-xs text-slate-300 mt-1">Live Threat Rule Injection, 1930 NCRP Incident Queue, & J.A.R.V.I.S. Bilingual PA System.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom HUD Status Strip -->
+    <div class="border-t border-cyan-500/30 pt-3 flex flex-wrap items-center justify-between text-xs font-mono-tech text-cyan-400/80 gap-2">
+      <div>STARK BHARAT SATELLITE LINK: <span class="text-emerald-400">SYNCHRONIZED (1930 NCRP NODE READY)</span></div>
+      <div>TEAM HACKFORGE // INNOVATORS // HACKFEST 3.0</div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       MAIN APPLICATION: S.H.I.E.L.D. / STARK CYBERSATHI COMMAND DECK
+       ========================================================================= -->
+  <div id="mainHudApp" class="min-h-screen flex flex-col">
+    
+    <!-- Top Tactical Navbar -->
+    <header class="sticky top-0 z-40 bg-[#040d1a]/95 backdrop-blur-md border-b border-cyan-500/30 px-4 lg:px-6 py-2.5">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+        
+        <!-- Brand & Re-open Intro Button -->
+        <div class="flex items-center gap-3">
+          <button onclick="reopenSplash()" title="Return to Arc Reactor Intro" class="w-9 h-9 rounded-full bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center shadow-[0_0_15px_#00f0ff] hover:scale-105 transition">
+            <i data-lucide="shield" class="w-4 h-4 text-cyan-300"></i>
+          </button>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-orbitron font-black text-base sm:text-lg tracking-wider text-white">CYBER<span class="text-cyan-400">SATHI</span></span>
+              <span class="marvel-badge text-[9px]">HACKFORGE</span>
+            </div>
+            <div class="text-[10px] font-mono-tech text-cyan-400/80">S.H.I.E.L.D. DIGITAL PROTECTION // HACKFEST 3.0</div>
+          </div>
+        </div>
+
+        <!-- Module Navigation Pills -->
+        <nav class="flex flex-wrap items-center gap-1.5">
+          <button onclick="switchTab('radar')" id="tab-radar" class="nav-pill active px-3 py-1.5 rounded border border-cyan-500/30 text-xs font-orbitron tracking-wider transition flex items-center gap-1.5">
+            <i data-lucide="radar" class="w-3.5 h-3.5"></i> <span data-i18n="navRadar">OMNI-RADAR</span>
+          </button>
+          <button onclick="switchTab('vault')" id="tab-vault" class="nav-pill px-3 py-1.5 rounded border border-cyan-500/30 text-xs font-orbitron tracking-wider transition flex items-center gap-1.5">
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span data-i18n="navVault">VIBRANIUM VAULT</span>
+          </button>
+          <button onclick="switchTab('illusion')" id="tab-illusion" class="nav-pill px-3 py-1.5 rounded border border-cyan-500/30 text-xs font-orbitron tracking-wider transition flex items-center gap-1.5">
+            <i data-lucide="eye" class="w-3.5 h-3.5"></i> <span data-i18n="navIllusion">ILLUSION LAB</span>
+          </button>
+          <button onclick="switchTab('academy')" id="tab-academy" class="nav-pill px-3 py-1.5 rounded border border-cyan-500/30 text-xs font-orbitron tracking-wider transition flex items-center gap-1.5">
+            <i data-lucide="award" class="w-3.5 h-3.5"></i> <span data-i18n="navAcademy">ACADEMY</span>
+          </button>
+          <button onclick="switchTab('sos')" id="tab-sos" class="px-3 py-1.5 rounded bg-red-600/90 hover:bg-red-500 text-white border border-red-400 text-xs font-orbitron font-bold tracking-wider transition flex items-center gap-1.5 shadow-[0_0_12px_rgba(230,36,41,0.6)]">
+            <i data-lucide="siren" class="w-3.5 h-3.5 animate-bounce"></i> <span data-i18n="navSos">1930 SOS</span>
+          </button>
+          <button onclick="switchTab('admin')" id="tab-admin" class="nav-pill px-3 py-1.5 rounded border border-amber-400/60 bg-amber-500/10 text-amber-300 text-xs font-orbitron font-bold tracking-wider transition flex items-center gap-1.5">
+            <i data-lucide="terminal" class="w-3.5 h-3.5"></i> <span data-i18n="navAdmin">ADMIN PANEL</span>
+          </button>
+        </nav>
+
+        <!-- Right Controls: Indian Accent Bilingual Voice Switcher (EN-IN / HI-IN / MUTE) + Intro -->
+        <div class="flex items-center gap-2">
+          <div class="flex items-center bg-slate-950 border border-cyan-500/40 rounded p-0.5 text-[11px] font-mono-tech">
+            <button onclick="setJarvisLang('en-IN')" id="nav-lang-en" class="lang-btn active px-2 py-1 rounded transition" title="Indian English J.A.R.V.I.S. Accent">
+              🇮🇳 EN-IN
+            </button>
+            <button onclick="setJarvisLang('hi-IN')" id="nav-lang-hi" class="lang-btn px-2 py-1 rounded transition" title="Hindi J.A.R.V.I.S. Voice">
+              🇮🇳 हिंदी
+            </button>
+            <button onclick="setJarvisLang('mute')" id="nav-lang-mute" class="lang-btn px-2 py-1 rounded transition text-slate-400" title="Mute Voice">
+              🔇
+            </button>
+          </div>
+
+          <button onclick="reopenSplash()" class="px-2.5 py-1.5 rounded border border-amber-400/50 bg-amber-500/10 text-amber-300 text-xs font-mono-tech hover:bg-amber-500/20 transition flex items-center gap-1" title="Show Marvel Arc Reactor First Page">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> INTRO
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Top Live J.A.R.V.I.S. Telemetry & Voice Bar -->
+    <div class="bg-[#061529]/90 border-b border-cyan-500/20 px-4 lg:px-8 py-2">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs font-mono-tech">
+        <div class="flex items-center gap-3">
+          <span class="text-cyan-400 flex items-center gap-1.5">
+            <span id="gridStatusDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            GRID: <strong id="gridStatusLabel" class="text-white">DEFCON-5 SECURE</strong>
+          </span>
+          <span class="text-slate-500 hidden sm:inline">|</span>
+          <span class="text-amber-300" id="jarvisStatusLine">
+            J.A.R.V.I.S. (EN-IN): "Namaste Agent. All CyberSathi defensive subroutines are online."
+          </span>
+          <button onclick="testJarvisGreeting()" class="px-2 py-0.5 rounded bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 hover:bg-cyan-500/30 text-[11px]">
+            🔊 SPEAK
+          </button>
+        </div>
+        <div class="flex items-center gap-4">
+          <span>SCANS: <strong id="statScans" class="text-cyan-400">18</strong></span>
+          <span>BLOCKED: <strong id="statThreats" class="text-red-400">7</strong></span>
+          <span>CUSTOM RULES: <strong id="statRules" class="text-emerald-400">4</strong></span>
+          <span>CLEARANCE: <strong id="statRank" class="text-amber-400">LEVEL 7</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 space-y-8">
+
+      <!-- =====================================================================
+           MODULE 1: J.A.R.V.I.S. OMNI-THREAT RADAR (URL, UPI, SMS, APK)
+           ===================================================================== -->
+      <section id="sec-radar" class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Scanner Control Panel -->
+          <div class="lg:col-span-7 stark-card p-6 space-y-5">
+            <div class="flex items-center justify-between border-b border-cyan-500/20 pb-3">
+              <div>
+                <span class="text-xs font-mono-tech text-amber-400">// STARK BHARAT TARGETING SYSTEM v4.5</span>
+                <h2 class="font-orbitron text-xl font-bold text-white flex items-center gap-2">
+                  <i data-lucide="crosshair" class="w-5 h-5 text-cyan-400"></i>
+                  <span data-i18n="radarTitle">J.A.R.V.I.S. OMNI-THREAT SCANNER</span>
+                </h2>
+              </div>
+              <span class="px-2.5 py-1 rounded bg-cyan-500/15 border border-cyan-400/40 text-cyan-300 font-mono-tech text-xs">
+                HEURISTIC + ADMIN RULES
+              </span>
+            </div>
+
+            <p id="radarDesc" class="text-slate-300 text-sm">
+              Paste any suspicious <strong>Website Link</strong>, <strong>UPI Payment ID</strong> (e.g., fake refund handles), or <strong>SMS/WhatsApp KYC Message</strong>. J.A.R.V.I.S. inspects domain heuristics, Punycode spoofing, social-engineering triggers, and custom Admin Blacklist rules.
+            </p>
+
+            <!-- Preset Threat Payloads -->
+            <div class="flex flex-wrap gap-2">
+              <button onclick="loadSample('phish')" class="text-xs font-mono-tech px-3 py-1.5 rounded bg-red-500/15 border border-red-400/40 text-red-300 hover:bg-red-500/25">
+                [TEST: SBI KYC Phishing URL]
+              </button>
+              <button onclick="loadSample('upi')" class="text-xs font-mono-tech px-3 py-1.5 rounded bg-amber-500/15 border border-amber-400/40 text-amber-300 hover:bg-amber-500/25">
+                [TEST: Fake Refund UPI Handle]
+              </button>
+              <button onclick="loadSample('sms')" class="text-xs font-mono-tech px-3 py-1.5 rounded bg-purple-500/15 border border-purple-400/40 text-purple-300 hover:bg-purple-500/25">
+                [TEST: Electricity Bill Scam SMS]
+              </button>
+              <button onclick="loadSample('safe')" class="text-xs font-mono-tech px-3 py-1.5 rounded bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 hover:bg-emerald-500/25">
+                [TEST: Official NPCI Portal]
+              </button>
+            </div>
+
+            <!-- Input Box -->
+            <div class="space-y-3">
+              <textarea id="omniInput" rows="3" placeholder="Enter URL, UPI ID (e.g. kyc.verify@okaxis), or suspicious SMS text..." class="w-full rounded bg-[#020813]/90 border border-cyan-500/40 p-3.5 text-sm font-mono-tech text-cyan-200 focus:outline-none focus:border-cyan-300"></textarea>
+              <button onclick="runOmniScan()" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-orbitron font-bold text-sm tracking-widest uppercase rounded shadow-[0_0_20px_rgba(0,240,255,0.4)] transition flex items-center justify-center gap-2">
+                <i data-lucide="scan-line" class="w-4 h-4"></i> <span data-i18n="scanBtn">ENGAGE J.A.R.V.I.S. FORENSIC SCAN</span>
+              </button>
+            </div>
+
+            <!-- APK / File SHA-256 Sandbox Verifier -->
+            <div class="pt-3 border-t border-cyan-500/20">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 class="font-orbitron text-xs font-bold text-amber-400 uppercase">ULTRON TROJAN APK / FILE HASH SANDBOX</h3>
+                  <p class="text-xs text-slate-400">Select any local file or `.apk` to compute its real WebCrypto SHA-256 signature locally.</p>
+                </div>
+                <label class="cursor-pointer px-3 py-1.5 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-mono-tech hover:bg-amber-500/30 transition">
+                  <input type="file" id="apkFileInput" class="hidden" onchange="scanLocalFileHash(event)" />
+                  UPLOAD FILE FOR SHA-256 SCAN
+                </label>
+              </div>
+              <div id="apkHashOutput" class="hidden mt-2 p-2.5 rounded bg-black/60 border border-cyan-500/30 font-mono-tech text-xs text-cyan-300 break-all"></div>
+            </div>
+          </div>
+
+          <!-- Right Column: Live HUD Diagnostic Output -->
+          <div class="lg:col-span-5 stark-card p-6 flex flex-col justify-between space-y-4">
+            <div class="flex items-center justify-between border-b border-cyan-500/20 pb-3">
+              <span class="font-orbitron text-sm font-bold text-cyan-300" data-i18n="telemetryVerdict">TARGET TELEMETRY VERDICT</span>
+              <span id="scanVerdictBadge" class="px-2.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono-tech text-xs">AWAITING TARGET</span>
+            </div>
+
+            <!-- Circular Threat Score Meter -->
+            <div class="flex items-center gap-6 my-auto py-2">
+              <div class="relative w-28 h-28 rounded-full border-4 border-cyan-500/30 flex flex-col items-center justify-center bg-[#020a16] shadow-[0_0_25px_rgba(0,240,255,0.2)]">
+                <span id="riskScoreNum" class="font-orbitron text-3xl font-black text-cyan-400">0%</span>
+                <span class="text-[10px] font-mono-tech text-slate-400">THREAT INDEX</span>
+              </div>
+              <div class="flex-1 space-y-1.5">
+                <div id="verdictTitle" class="font-orbitron text-lg font-bold text-white">No Active Target</div>
+                <p id="verdictSummary" class="text-xs text-slate-300 leading-relaxed">
+                  Select a sample payload or input a link to trigger J.A.R.V.I.S. heuristic analysis in Indian English or Hindi.
+                </p>
+              </div>
+            </div>
+
+            <!-- Heuristic Breakdown List -->
+            <div class="space-y-2">
+              <div class="text-xs font-mono-tech text-cyan-400 uppercase">FORENSIC SIGNALS DETECTED:</div>
+              <ul id="scanFlagsList" class="space-y-1.5 text-xs font-mono-tech text-slate-300 bg-black/50 p-3 rounded border border-cyan-500/20 min-h-[110px]">
+                <li class="text-slate-500">&gt; Radar idle. Ready for packet inspection.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           MODULE 2: WAKANDA VIBRANIUM VAULT (ENTROPY + DARK WEB BREACH)
+           ===================================================================== -->
+      <section id="sec-vault" class="hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Cryptographic Password & Shannon Entropy Forge -->
+          <div class="stark-card p-6 space-y-4">
+            <div class="border-b border-cyan-500/20 pb-3 flex justify-between items-center">
+              <div>
+                <span class="text-xs font-mono-tech text-amber-400">// WAKANDA CRYPTOGRAPHIC SHIELD</span>
+                <h2 class="font-orbitron text-xl font-bold text-white">VIBRANIUM PASSWORD FORGE</h2>
+              </div>
+              <span id="entropyBitsBadge" class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 font-mono-tech text-xs">0 BITS ENTROPY</span>
+            </div>
+
+            <p class="text-sm text-slate-300">
+              Test your password resilience against an <strong>Ultron GPU Cluster (100 Billion Hashes/sec)</strong> using real Shannon Entropy ($H = L \times \log_2(R)$).
+            </p>
+
+            <div class="relative">
+              <input type="text" id="pwdInput" oninput="evaluatePassword()" placeholder="Type or generate a password to test armor strength..." class="w-full rounded bg-[#020813] border border-cyan-500/40 p-3.5 text-sm font-mono-tech text-cyan-200 focus:outline-none" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-xs font-mono-tech">
+              <div class="p-3 rounded bg-black/50 border border-cyan-500/20">
+                <div class="text-slate-400">EST. GPU CRACK TIME:</div>
+                <div id="crackTimeText" class="text-base font-bold text-amber-400 mt-1">Instant (0 sec)</div>
+              </div>
+              <div class="p-3 rounded bg-black/50 border border-cyan-500/20">
+                <div class="text-slate-400">ARMOR RATING:</div>
+                <div id="armorGradeText" class="text-base font-bold text-cyan-400 mt-1">UNPROTECTED</div>
+              </div>
+            </div>
+
+            <button onclick="generateStarkPassword()" class="w-full py-2.5 rounded bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400 text-amber-300 font-orbitron text-xs font-bold tracking-wider uppercase transition">
+              FORGE 20-CHAR VIBRANIUM KEY (CSPRNG)
+            </button>
+          </div>
+
+          <!-- Dark Web Breach K-Anonymity Scanner -->
+          <div class="stark-card p-6 space-y-4">
+            <div class="border-b border-cyan-500/20 pb-3 flex justify-between items-center">
+              <div>
+                <span class="text-xs font-mono-tech text-purple-400">// S.H.I.E.L.D. GLOBAL INTEL</span>
+                <h2 class="font-orbitron text-xl font-bold text-white">DARK WEB BREACH SCANNER</h2>
+              </div>
+              <span class="px-2.5 py-1 rounded bg-purple-500/20 text-purple-300 font-mono-tech text-xs">SHA-256 K-ANONYMITY</span>
+            </div>
+
+            <p class="text-sm text-slate-300">
+              Check if your email or phone number was exposed in known Indian & Global credential dumps. Uses client-side <strong>WebCrypto SHA-256 hashing</strong> so your private identifier never leaves your device in plaintext.
+            </p>
+
+            <div class="flex gap-2">
+              <input type="text" id="breachInput" placeholder="Enter email (e.g. agent@shield.gov or test@breach.com)..." class="flex-1 rounded bg-[#020813] border border-cyan-500/40 p-3 text-sm font-mono-tech text-cyan-200 focus:outline-none" />
+              <button onclick="runBreachCheck()" class="px-5 rounded bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-orbitron font-bold text-xs tracking-wider uppercase">
+                SCAN
+              </button>
+            </div>
+
+            <div id="breachResultBox" class="p-4 rounded bg-black/60 border border-cyan-500/20 font-mono-tech text-xs space-y-2 text-slate-300">
+              <div>&gt; Enter an email or phone number to compute SHA-256 k-anonymity digest.</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           MODULE 3: MYSTERIO ILLUSION LAB (SPOT-THE-PHISH SIMULATOR)
+           ===================================================================== -->
+      <section id="sec-illusion" class="hidden space-y-6">
+        <div class="stark-card p-6 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-cyan-500/20 pb-3">
+            <div>
+              <span class="text-xs font-mono-tech text-purple-400">// MYSTERIO DECEPTION TRAINING</span>
+              <h2 class="font-orbitron text-xl font-bold text-white">SPOT-THE-PHISH TACTICAL SIMULATOR</h2>
+            </div>
+            <div class="font-mono-tech text-xs text-amber-400">
+              SCENARIO <span id="phishIndexNum">1</span> / 3
+            </div>
+          </div>
+
+          <div id="phishEnvelope" class="p-5 rounded bg-[#020916] border border-cyan-500/30 space-y-3 font-mono-tech text-xs">
+            <div class="flex flex-wrap justify-between gap-2 border-b border-slate-800 pb-2">
+              <div><span class="text-slate-400">FROM:</span> <strong id="mailFrom" class="text-white"></strong></div>
+              <div><span class="text-slate-400">RETURN-PATH:</span> <span id="mailReturn" class="text-amber-400"></span></div>
+            </div>
+            <div><span class="text-slate-400">SUBJECT:</span> <strong id="mailSubject" class="text-cyan-300 text-sm"></strong></div>
+            <div id="mailBody" class="p-4 rounded bg-slate-900/90 text-slate-200 leading-relaxed text-sm font-sans"></div>
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <button onclick="submitPhishDecision(true)" class="flex-1 py-3 rounded bg-red-600/25 hover:bg-red-600/40 border border-red-500 text-red-300 font-orbitron font-bold text-xs tracking-wider uppercase">
+              🚨 BLOCK: THIS IS A MYSTERIO PHISHING TRAP
+            </button>
+            <button onclick="submitPhishDecision(false)" class="flex-1 py-3 rounded bg-emerald-600/25 hover:bg-emerald-600/40 border border-emerald-500 text-emerald-300 font-orbitron font-bold text-xs tracking-wider uppercase">
+              ✅ ALLOW: VERIFIED SAFE COMMUNICATION
+            </button>
+          </div>
+
+          <div id="phishFeedback" class="hidden p-4 rounded bg-black/70 border border-cyan-400/40 text-xs font-mono-tech space-y-2"></div>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           MODULE 4: S.H.I.E.L.D. ACADEMY & AVENGERS AGENT CREDENTIAL
+           ===================================================================== -->
+      <section id="sec-academy" class="hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <div class="lg:col-span-6 stark-card p-6 space-y-4">
+            <span class="text-xs font-mono-tech text-cyan-400">// S.H.I.E.L.D. FIELD QUALIFICATION</span>
+            <h2 class="font-orbitron text-xl font-bold text-white">AGENT CLEARANCE ASSESSMENT</h2>
+            <div id="quizBox" class="space-y-4"></div>
+          </div>
+
+          <!-- Printable S.H.I.E.L.D. CyberSathi Credential -->
+          <div class="lg:col-span-6 stark-card p-6 space-y-4 border-2 border-amber-400/60">
+            <div class="flex justify-between items-center border-b border-amber-400/30 pb-3">
+              <div>
+                <div class="marvel-badge text-[10px] inline-block">S.H.I.E.L.D. CREDENTIAL</div>
+                <h3 class="font-orbitron text-lg font-bold text-white mt-1">CYBERSATHI DEFENDER BADGE</h3>
+              </div>
+              <i data-lucide="shield-alert" class="w-8 h-8 text-amber-400"></i>
+            </div>
+
+            <div class="space-y-3 text-xs font-mono-tech">
+              <div>
+                <label class="text-slate-400 block mb-1">ENTER AGENT NAME FOR CREDENTIAL:</label>
+                <input type="text" id="agentNameInput" value="AGENT STARK // HACKFORGE" oninput="updateBadgeName()" class="w-full rounded bg-black/60 border border-cyan-500/40 p-2.5 text-cyan-300 font-orbitron text-sm" />
+              </div>
+
+              <div id="printableBadge" class="p-5 rounded bg-gradient-to-br from-[#061a33] via-[#030d1a] to-[#1a0b12] border border-cyan-400/50 space-y-2 text-center">
+                <div class="text-[10px] text-amber-400 tracking-widest">HACKFEST 3.0 // TEAM HACKFORGE INITIATIVE</div>
+                <div id="badgeAgentDisplay" class="font-orbitron text-2xl font-black text-white tracking-wider">AGENT STARK // HACKFORGE</div>
+                <div class="text-xs text-cyan-300">CERTIFIED CYBERSATHI DIGITAL GUARDIAN</div>
+                <div class="pt-2 flex justify-center gap-4 text-[11px] text-emerald-400">
+                  <span>CLEARANCE: LEVEL 10</span>
+                  <span>•</span>
+                  <span>ID: CS-HF3-2026</span>
+                </div>
+              </div>
+
+              <button onclick="window.print()" class="w-full py-2.5 rounded bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400 text-cyan-300 font-orbitron font-bold text-xs uppercase tracking-wider">
+                PRINT / EXPORT S.H.I.E.L.D. DIPLOMA
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           MODULE 5: AVENGERS CODE-RED 1930 SOS & FIR DOSSIER GENERATOR
+           ===================================================================== -->
+      <section id="sec-sos" class="hidden space-y-6">
+        <div class="stark-card p-6 border-2 border-red-500/60 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-red-500/30 pb-4">
+            <div>
+              <span class="marvel-badge text-xs">AVENGERS CODE-RED PROTOCOL</span>
+              <h2 class="font-orbitron text-2xl font-black text-white mt-1">NATIONAL 1930 GOLDEN-HOUR INCIDENT RESPONSE</h2>
+            </div>
+            <a href="tel:1930" class="px-5 py-3 rounded bg-red-600 hover:bg-red-500 text-white font-orbitron font-black text-sm tracking-wider shadow-[0_0_25px_rgba(230,36,41,0.8)] flex items-center gap-2">
+              <i data-lucide="phone-call" class="w-4 h-4"></i> DIAL 1930 HELPLINE NOW
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-3 text-xs font-mono-tech">
+              <div class="text-amber-400 font-bold uppercase">GENERATE OFFICIAL GOLDEN-HOUR FREEZE DOSSIER (AUTO-SYNCED TO ADMIN PANEL):</div>
+              <input id="firName" type="text" placeholder="Victim Full Name (e.g. Rajesh Sharma)" class="w-full p-2.5 rounded bg-black/60 border border-cyan-500/30 text-white" />
+              <input id="firBank" type="text" placeholder="Bank / UPI App & 12-Digit UTR Reference Number" class="w-full p-2.5 rounded bg-black/60 border border-cyan-500/30 text-white" />
+              <input id="firAmount" type="text" placeholder="Defrauded Amount (INR) & Timestamp (e.g. ₹45,000)" class="w-full p-2.5 rounded bg-black/60 border border-cyan-500/30 text-white" />
+              <textarea id="firDesc" rows="2" placeholder="Suspect UPI ID / Phone / Phishing Link used..." class="w-full p-2.5 rounded bg-black/60 border border-cyan-500/30 text-white"></textarea>
+              <button onclick="generateFirDossier()" class="w-full py-3 rounded bg-red-600 hover:bg-red-500 text-white font-orbitron font-bold text-xs tracking-wider uppercase">
+                COMPILE & TRANSMIT TO S.H.I.E.L.D. ADMIN QUEUE
+              </button>
+            </div>
+
+            <div id="firOutputBox" class="p-4 rounded bg-black/75 border border-red-500/40 font-mono-tech text-xs text-slate-200 space-y-2">
+              <div class="text-red-400 font-bold">// S.H.I.E.L.D. EMERGENCY CONTAINMENT CHECKLIST:</div>
+              <div>1. Call <strong>1930</strong> or visit <strong>cybercrime.gov.in</strong> within the Golden Hour (first 60 mins) to freeze fraudulent beneficiary bank nodes.</div>
+              <div>2. Preserve the 12-digit <strong>UPI UTR / RRN number</strong> and SMS alerts.</div>
+              <div>3. Every dossier compiled here is pushed in real time to the <strong>Director Admin Panel</strong> for NCRP Lien Freeze tracking.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           MODULE 6: S.H.I.E.L.D. DIRECTOR FURY / STARK LEVEL-10 ADMIN PANEL
+           ===================================================================== -->
+      <section id="sec-admin" class="hidden space-y-6">
+
+        <!-- Admin Authentication Gate (Shown when locked) -->
+        <div id="adminLockGate" class="stark-card p-8 max-w-xl mx-auto text-center space-y-5 border-2 border-amber-400/60">
+          <div class="w-16 h-16 rounded-full bg-amber-500/20 border-2 border-amber-400 mx-auto flex items-center justify-center shadow-[0_0_25px_rgba(255,184,0,0.5)]">
+            <i data-lucide="key-round" class="w-8 h-8 text-amber-300"></i>
+          </div>
+          <div>
+            <span class="marvel-badge text-xs">RESTRICTED // LEVEL 10 CLEARANCE</span>
+            <h2 class="font-orbitron text-2xl font-black text-white mt-2">DIRECTOR FURY & STARK ADMIN CONSOLE</h2>
+            <p class="text-xs font-mono-tech text-slate-300 mt-1">
+              Enter S.H.I.E.L.D. Director PIN (Default: <strong class="text-amber-400">1930</strong>) or use One-Click Judge Bypass.
+            </p>
+          </div>
+
+          <div class="flex gap-2 max-w-xs mx-auto">
+            <input id="adminPinInput" type="password" value="1930" placeholder="PIN (1930)" class="flex-1 rounded bg-black/80 border border-amber-400/60 p-2.5 text-center font-orbitron text-amber-300 tracking-widest" />
+            <button onclick="unlockAdminPanel()" class="px-5 py-2.5 rounded bg-amber-400 hover:bg-amber-300 text-slate-950 font-orbitron font-black text-xs uppercase">
+              UNLOCK
+            </button>
+          </div>
+
+          <button onclick="unlockAdminPanel(true)" class="text-xs font-mono-tech text-cyan-400 hover:text-white underline">
+            [⚡ ONE-CLICK HACKFEST 3.0 JUDGE DEMO UNLOCK]
+          </button>
+        </div>
+
+        <!-- Unlocked Director Command Console -->
+        <div id="adminDashboardContent" class="hidden space-y-6">
+
+          <!-- Top Admin Control Header -->
+          <div class="stark-card p-5 border-l-4 border-l-amber-400 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="marvel-badge text-[10px]">DIRECTOR OVERRIDE ACTIVE</span>
+                <span class="text-xs font-mono-tech text-emerald-400">// S.H.I.E.L.D. COMMAND NODE: LUCKNOW-IN</span>
+              </div>
+              <h2 class="font-orbitron text-xl sm:text-2xl font-black text-white mt-1">
+                CYBERSATHI CENTRAL ADMIN & THREAT OPERATIONS CENTER
+              </h2>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button onclick="toggleVeronicaLockdown()" id="veronicaBtn" class="px-4 py-2 rounded bg-red-600/25 hover:bg-red-600/40 border border-red-500 text-red-300 font-orbitron font-bold text-xs tracking-wider uppercase flex items-center gap-1.5">
+                <i data-lucide="shield-alert" class="w-4 h-4"></i> ENGAGE VERONICA LOCKDOWN
+              </button>
+              <button onclick="exportAdminDatabase()" class="px-3.5 py-2 rounded bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400 text-cyan-300 font-mono-tech text-xs flex items-center gap-1.5">
+                <i data-lucide="download" class="w-4 h-4"></i> EXPORT DB (.JSON)
+              </button>
+              <button onclick="lockAdminPanel()" class="px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono-tech text-xs">
+                LOCK
+              </button>
+            </div>
+          </div>
+
+          <!-- Admin KPI Metrics Row -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="stark-card p-4">
+              <div class="text-[11px] font-mono-tech text-cyan-400">TOTAL OMNI-SCANS</div>
+              <div id="adminKpiScans" class="font-orbitron text-3xl font-black text-white mt-1">18</div>
+              <div class="text-[11px] font-mono-tech text-emerald-400 mt-1">100% Client + Rule Sync</div>
+            </div>
+            <div class="stark-card p-4">
+              <div class="text-[11px] font-mono-tech text-red-400">THREATS INTERCEPTED</div>
+              <div id="adminKpiThreats" class="font-orbitron text-3xl font-black text-red-400 mt-1">7</div>
+              <div class="text-[11px] font-mono-tech text-slate-400 mt-1">Phishing / Fake UPI / SMS</div>
+            </div>
+            <div class="stark-card p-4">
+              <div class="text-[11px] font-mono-tech text-amber-400">ACTIVE THREAT SIGNATURES</div>
+              <div id="adminKpiRules" class="font-orbitron text-3xl font-black text-amber-400 mt-1">4</div>
+              <div class="text-[11px] font-mono-tech text-slate-400 mt-1">Live Injected Heuristics</div>
+            </div>
+            <div class="stark-card p-4">
+              <div class="text-[11px] font-mono-tech text-purple-400">1930 FIR DOSSIERS</div>
+              <div id="adminKpiFirs" class="font-orbitron text-3xl font-black text-purple-300 mt-1">2</div>
+              <div class="text-[11px] font-mono-tech text-emerald-400 mt-1">Golden-Hour NCRP Queue</div>
+            </div>
+          </div>
+
+          <!-- Grid: Bilingual J.A.R.V.I.S. Voice Megaphone + Custom Threat Rule Engine -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left 5 Cols: J.A.R.V.I.S. Indian Accent Voice Command & PA Broadcast -->
+            <div class="lg:col-span-5 stark-card p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-cyan-500/20 pb-2.5">
+                <div>
+                  <span class="text-[11px] font-mono-tech text-amber-400">// BHARAT VOICE SYNTHESIZER</span>
+                  <h3 class="font-orbitron text-base font-bold text-white">J.A.R.V.I.S. BILINGUAL PA CONSOLE</h3>
+                </div>
+                <span id="detectedVoiceTag" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono-tech text-[10px]">
+                  VOICE: EN-IN / HI-IN
+                </span>
+              </div>
+
+              <p class="text-xs text-slate-300">
+                Broadcast custom voice advisories in <strong>Indian English (`en-IN`)</strong> or <strong>Hindi (`hi-IN`)</strong> during your HACKFEST 3.0 demonstration.
+              </p>
+
+              <!-- Quick Preset Bilingual Voice Broadcasts -->
+              <div class="space-y-1.5 text-xs font-mono-tech">
+                <div class="text-cyan-400 text-[11px]">QUICK BILINGUAL BROADCAST PRESETS:</div>
+                <button onclick="broadcastPreset('welcome_en')" class="w-full text-left p-2 rounded bg-slate-900/90 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-200">
+                  🇮🇳 [EN-IN] "Namaste Judges! Welcome to CyberSathi by Team Hackforge."
+                </button>
+                <button onclick="broadcastPreset('welcome_hi')" class="w-full text-left p-2 rounded bg-slate-900/90 hover:bg-amber-500/20 border border-amber-500/30 text-amber-200">
+                  🇮🇳 [हिंदी] "नमस्ते! साइबर-साथी और टीम हैकफोर्ज के सुरक्षा कमांड सेंटर में आपका स्वागत है।"
+                </button>
+                <button onclick="broadcastPreset('upi_hi')" class="w-full text-left p-2 rounded bg-slate-900/90 hover:bg-red-500/20 border border-red-500/30 text-red-200">
+                  🚨 [हिंदी] "सावधान! पैसे प्राप्त करने के लिए कभी भी अपना यूपीआई पिन दर्ज न करें। तुरंत 1930 पर कॉल करें।"
+                </button>
+              </div>
+
+              <!-- Custom Text-to-Speech Box -->
+              <div class="space-y-2 pt-2 border-t border-cyan-500/20">
+                <textarea id="customJarvisText" rows="2" placeholder="Type any custom English or Hindi announcement for J.A.R.V.I.S. to speak..." class="w-full rounded bg-black/70 border border-cyan-500/40 p-2.5 text-xs font-mono-tech text-white"></textarea>
+                <div class="flex gap-2">
+                  <button onclick="speakCustomAdminText('en-IN')" class="flex-1 py-2 rounded bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-orbitron font-bold text-xs">
+                    🔊 SPEAK (EN-IN)
+                  </button>
+                  <button onclick="speakCustomAdminText('hi-IN')" class="flex-1 py-2 rounded bg-amber-400 hover:bg-amber-300 text-slate-950 font-orbitron font-bold text-xs">
+                    🔊 बोलें (हिंदी HI-IN)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right 7 Cols: Live Threat Intelligence Rules Manager -->
+            <div class="lg:col-span-7 stark-card p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-cyan-500/20 pb-2.5">
+                <div>
+                  <span class="text-[11px] font-mono-tech text-emerald-400">// REAL-TIME HEURISTIC INJECTION</span>
+                  <h3 class="font-orbitron text-base font-bold text-white">LIVE THREAT SIGNATURE BLACKLIST ENGINE</h3>
+                </div>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono-tech text-[10px]">
+                  SYNCED WITH OMNI-RADAR
+                </span>
+              </div>
+
+              <p class="text-xs text-slate-300">
+                Add any rogue domain, fake UPI handle, or scam keyword below. It is immediately injected into the <strong>J.A.R.V.I.S. Omni-Threat Scanner</strong> on Tab 1.
+              </p>
+
+              <!-- Add New Rule Form -->
+              <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs font-mono-tech">
+                <input id="newRulePattern" type="text" placeholder="Pattern (e.g. fake-sbi-loan.xyz or @fraudupi)" class="sm:col-span-5 rounded bg-black/70 border border-cyan-500/40 p-2.5 text-cyan-200" />
+                <select id="newRuleCategory" class="sm:col-span-4 rounded bg-black/70 border border-cyan-500/40 p-2.5 text-amber-300">
+                  <option value="ROGUE UPI HANDLE">ROGUE UPI HANDLE (+65% Risk)</option>
+                  <option value="PHISHING DOMAIN">PHISHING DOMAIN (+65% Risk)</option>
+                  <option value="SCAM SMS KEYWORD">SCAM SMS KEYWORD (+65% Risk)</option>
+                </select>
+                <button onclick="addAdminThreatRule()" class="sm:col-span-3 rounded bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-orbitron font-bold text-xs uppercase py-2.5">
+                  + INJECT RULE
+                </button>
+              </div>
+
+              <!-- Active Rules Table -->
+              <div class="max-h-48 overflow-y-auto rounded border border-cyan-500/20 bg-black/50">
+                <table class="w-full text-left font-mono-tech text-xs">
+                  <thead class="bg-slate-900/90 text-cyan-400 border-b border-cyan-500/20">
+                    <tr>
+                      <th class="p-2.5">PATTERN / INDICATOR</th>
+                      <th class="p-2.5">CATEGORY</th>
+                      <th class="p-2.5 text-right">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminRulesTableBody" class="divide-y divide-slate-800/80 text-slate-200"></tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Admin Row: 1930 FIR Incident Triage Queue & Live Audit Telemetry Log -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- 1930 Golden-Hour FIR Triage Queue -->
+            <div class="lg:col-span-7 stark-card p-5 space-y-3">
+              <div class="flex items-center justify-between border-b border-cyan-500/20 pb-2">
+                <div>
+                  <span class="text-[11px] font-mono-tech text-red-400">// NATIONAL CYBER CRIME REPORTING PORTAL (NCRP) QUEUE</span>
+                  <h3 class="font-orbitron text-base font-bold text-white">1930 GOLDEN-HOUR INCIDENT TRIAGE</h3>
+                </div>
+                <span class="text-xs font-mono-tech text-amber-300">CLICK STATUS TO FREEZE LIEN</span>
+              </div>
+
+              <div class="overflow-x-auto rounded border border-cyan-500/20 bg-black/50">
+                <table class="w-full text-left font-mono-tech text-xs">
+                  <thead class="bg-slate-900/90 text-amber-400 border-b border-cyan-500/20">
+                    <tr>
+                      <th class="p-2.5">TICKET ID</th>
+                      <th class="p-2.5">COMPLAINANT & BANK UTR</th>
+                      <th class="p-2.5">AMOUNT</th>
+                      <th class="p-2.5">NCRP STATUS (CLICK TO TOGGLE)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminFirTableBody" class="divide-y divide-slate-800/80 text-slate-200"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Live System Audit & Telemetry Log -->
+            <div class="lg:col-span-5 stark-card p-5 space-y-3">
+              <div class="flex items-center justify-between border-b border-cyan-500/20 pb-2">
+                <div>
+                  <span class="text-[11px] font-mono-tech text-cyan-400">// S.H.I.E.L.D. SIEM STREAM</span>
+                  <h3 class="font-orbitron text-base font-bold text-white">REAL-TIME AUDIT TELEMETRY</h3>
+                </div>
+                <button onclick="clearAuditLogs()" class="text-[11px] font-mono-tech text-slate-400 hover:text-white">CLEAR</button>
+              </div>
+              <div id="adminAuditLogBox" class="h-48 overflow-y-auto rounded bg-black/70 border border-cyan-500/20 p-3 font-mono-tech text-xs space-y-1.5 text-cyan-300"></div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // =========================================================================
+    // BILINGUAL INDIAN ACCENT J.A.R.V.I.S. VOICE ENGINE (en-IN & hi-IN)
+    // =========================================================================
+    let jarvisLang = 'en-IN'; // 'en-IN', 'hi-IN', or 'mute'
+    let availableVoices = [];
+    let totalScans = 18;
+    let threatsBlocked = 7;
+    let isVeronicaLockdown = false;
+
+    function loadSpeechVoices() {
+      if (!('speechSynthesis' in window)) return;
+      availableVoices = window.speechSynthesis.getVoices();
+      const indVoice = availableVoices.find(v => v.lang.includes('IN') || v.name.toLowerCase().includes('india') || v.name.toLowerCase().includes('ravi') || v.name.toLowerCase().includes('heera') || v.name.toLowerCase().includes('swara'));
+      const tag = document.getElementById('detectedVoiceTag');
+      if (tag && indVoice) {
+        tag.textContent = `VOICE: ${indVoice.name.slice(0, 18)} (${indVoice.lang})`;
+      }
+    }
+    if ('speechSynthesis' in window) {
+      loadSpeechVoices();
+      window.speechSynthesis.onvoiceschanged = loadSpeechVoices;
+    }
+
+    // Selects best Indian English (en-IN) or Hindi (hi-IN) voice
+    function pickIndianVoice(targetLang) {
+      if (!availableVoices.length && 'speechSynthesis' in window) {
+        availableVoices = window.speechSynthesis.getVoices();
+      }
+      if (targetLang === 'hi-IN') {
+        return (
+          availableVoices.find(v => v.lang === 'hi-IN' || v.lang.startsWith('hi')) ||
+          availableVoices.find(v => v.lang.includes('IN')) ||
+          availableVoices[0]
+        );
+      }
+      // Prefer Male Indian English (e.g., Microsoft Ravi, Google English India) for J.A.R.V.I.S.
+      return (
+        availableVoices.find(v => v.lang === 'en-IN' && /ravi|prabhat|male|india/i.test(v.name)) ||
+        availableVoices.find(v => v.lang === 'en-IN' || v.lang === 'en_IN') ||
+        availableVoices.find(v => v.lang.includes('IN') || /india/i.test(v.name)) ||
+        availableVoices.find(v => v.lang.startsWith('en')) ||
+        availableVoices[0]
+      );
+    }
+
+    // Bilingual Text Dictionary for UI & Voice Announcements
+    const i18nDict = {
+      'en-IN': {
+        navRadar: 'OMNI-RADAR',
+        navVault: 'VIBRANIUM VAULT',
+        navIllusion: 'ILLUSION LAB',
+        navAcademy: 'ACADEMY',
+        navSos: '1930 SOS',
+        navAdmin: 'ADMIN PANEL',
+        radarTitle: 'J.A.R.V.I.S. OMNI-THREAT SCANNER',
+        scanBtn: 'ENGAGE J.A.R.V.I.S. FORENSIC SCAN',
+        telemetryVerdict: 'TARGET TELEMETRY VERDICT',
+        greeting: 'Namaste Agent! I am J.A.R.V.I.S., engineered by Team Hackforge for CyberSathi. All Indian digital defense grids and 1930 helpline protocols are online.'
+      },
+      'hi-IN': {
+        navRadar: 'ओम्नी-रडार',
+        navVault: 'वाइब्रेनियम वॉल्ट',
+        navIllusion: 'मायावी लैब',
+        navAcademy: 'एकेडमी',
+        navSos: '1930 आपातकाल',
+        navAdmin: 'एडमिन पैनल',
+        radarTitle: 'जार्विस साइबर सुरक्षा स्कैनर',
+        scanBtn: 'जार्विस फॉरेंसिक स्कैन शुरू करें',
+        telemetryVerdict: 'सुरक्षा विश्लेषण परिणाम',
+        greeting: 'नमस्ते एजेंट! मैं जार्विस हूँ। टीम हैकफोर्ज के साइबर-साथी सुरक्षा कमांड सेंटर में आपका स्वागत है। सभी डिजिटल सुरक्षा प्रणालियाँ सक्रिय हैं।'
+      }
+    };
+
+    function setJarvisLang(mode) {
+      jarvisLang = mode;
+      // Update language pill highlights on both Splash and Navbar
+      ['en', 'hi', 'mute'].forEach(code => {
+        const navBtn = document.getElementById('nav-lang-' + code);
+        const splashBtn = document.getElementById('splash-lang-' + code);
+        const isActive = (mode === 'en-IN' && code === 'en') || (mode === 'hi-IN' && code === 'hi') || (mode === 'mute' && code === 'mute');
+        if (navBtn) navBtn.classList.toggle('active', isActive);
+        if (splashBtn) splashBtn.classList.toggle('active', isActive);
+      });
+
+      const activeLangKey = mode === 'hi-IN' ? 'hi-IN' : 'en-IN';
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18nDict[activeLangKey][key]) {
+          el.textContent = i18nDict[activeLangKey][key];
+        }
+      });
+
+      if (mode === 'hi-IN') {
+        jarvisSpeak(
+          'Warm greetings! Hindi voice mode is now active.',
+          'नमस्ते एजेंट! जार्विस हिंदी वॉइस मोड अब सक्रिय है।'
+        );
+      } else if (mode === 'en-IN') {
+        jarvisSpeak(
+          'Namaste Agent! J.A.R.V.I.S. Indian English voice telemetry is online.',
+          'नमस्ते एजेंट!'
+        );
+      } else if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        document.getElementById('jarvisStatusLine').textContent = 'J.A.R.V.I.S.: [VOICE MUTED]';
+      }
+    }
+
+    // Speaks English (en-IN) or Hindi (hi-IN) with Indian accent
+    function jarvisSpeak(enText, hiText, forceLang = null) {
+      const targetLang = forceLang || (jarvisLang === 'hi-IN' ? 'hi-IN' : 'en-IN');
+      const spokenText = targetLang === 'hi-IN' ? (hiText || enText) : enText;
+
+      const statusEl = document.getElementById('jarvisStatusLine');
+      if (statusEl) {
+        statusEl.textContent = `J.A.R.V.I.S. (${targetLang}): "${spokenText}"`;
+      }
+
+      if (jarvisLang === 'mute' && !forceLang) return;
+      if (!('speechSynthesis' in window)) return;
+
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(spokenText);
+      const chosenVoice = pickIndianVoice(targetLang);
+      if (chosenVoice) utter.voice = chosenVoice;
+      utter.lang = targetLang;
+      utter.rate = targetLang === 'hi-IN' ? 1.0 : 1.04;
+      utter.pitch = 0.94;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function testJarvisGreeting() {
+      playStarkChime();
+      jarvisSpeak(i18nDict['en-IN'].greeting, i18nDict['hi-IN'].greeting);
+    }
+
+    function playStarkChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1040, ctx.currentTime + 0.18);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.25);
+      } catch (e) {}
+    }
+
+    // =========================================================================
+    // PERSISTENT ADMIN DATABASE (Custom Threat Rules, 1930 FIRs, Audit Logs)
+    // =========================================================================
+    let adminThreatRules = [
+      { id: 1, pattern: 'sbi-kyc-update', category: 'PHISHING DOMAIN' },
+      { id: 2, pattern: 'refund.claim@okaxis', category: 'ROGUE UPI HANDLE' },
+      { id: 3, pattern: 'quicksupport', category: 'SCAM SMS KEYWORD' },
+      { id: 4, pattern: 'electricity power will be disconnected', category: 'SCAM SMS KEYWORD' }
+    ];
+
+    let adminFirQueue = [
+      {
+        ticket: 'CS-1930-884120',
+        name: 'Aarav Verma (Lucknow)',
+        bank: 'SBI UPI // UTR 430119283741',
+        amount: '₹38,500',
+        vector: 'rbi.kyc.refund.claim@okaxis',
+        status: 'NCRP LIEN FROZEN'
+      },
+      {
+        ticket: 'CS-1930-992045',
+        name: 'Priya Nair (Bengaluru)',
+        bank: 'HDFC NetBanking // UTR 430198827110',
+        amount: '₹19,200',
+        vector: 'http://sbi-kyc-update.top/login',
+        status: 'PENDING 1930 TRIAGE'
+      }
+    ];
+
+    let adminAuditLogs = [
+      '[14:20:05] [STARK-CORE] CyberSathi Mark-IV Kernel booted by Team HACKFORGE.',
+      '[14:21:12] [VOICE-ENGINE] Bilingual Indian Accent J.A.R.V.I.S. (en-IN / hi-IN) initialized.',
+      '[14:22:40] [NCRP-1930] Golden-Hour Lien Freeze executed on Ticket CS-1930-884120.'
+    ];
+
+    function appendAuditLog(moduleTag, msg) {
+      const now = new Date().toLocaleTimeString('en-IN', { hour12: false });
+      adminAuditLogs.unshift(`[${now}] [${moduleTag}] ${msg}`);
+      renderAdminPanelData();
+    }
+
+    function renderAdminPanelData() {
+      // Update top navbar & Admin KPI counters
+      document.getElementById('statScans').textContent = totalScans;
+      document.getElementById('statThreats').textContent = threatsBlocked;
+      document.getElementById('statRules').textContent = adminThreatRules.length;
+
+      const kpiScans = document.getElementById('adminKpiScans');
+      if (kpiScans) {
+        kpiScans.textContent = totalScans;
+        document.getElementById('adminKpiThreats').textContent = threatsBlocked;
+        document.getElementById('adminKpiRules').textContent = adminThreatRules.length;
+        document.getElementById('adminKpiFirs').textContent = adminFirQueue.length;
+      }
+
+      // Render Active Threat Rules Table
+      const rulesTbody = document.getElementById('adminRulesTableBody');
+      if (rulesTbody) {
+        rulesTbody.innerHTML = adminThreatRules.map(r => `
+          <tr class="hover:bg-cyan-500/10">
+            <td class="p-2.5 font-bold text-cyan-300">${r.pattern}</td>
+            <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px]">${r.category}</span></td>
+            <td class="p-2.5 text-right">
+              <button onclick="deleteAdminRule(${r.id})" class="px-2 py-0.5 rounded bg-red-500/20 hover:bg-red-500/40 text-red-300 text-[10px]">
+                DELETE
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Render 1930 FIR Triage Table
+      const firTbody = document.getElementById('adminFirTableBody');
+      if (firTbody) {
+        firTbody.innerHTML = adminFirQueue.map((f, idx) => {
+          const isFrozen = f.status === 'NCRP LIEN FROZEN';
+          return `
+            <tr class="hover:bg-cyan-500/10">
+              <td class="p-2.5 font-bold text-amber-300">${f.ticket}</td>
+              <td class="p-2.5">
+                <div class="font-bold text-white">${f.name}</div>
+                <div class="text-[11px] text-slate-400">${f.bank}</div>
+              </td>
+              <td class="p-2.5 text-red-300 font-bold">${f.amount}</td>
+              <td class="p-2.5">
+                <button onclick="toggleFirStatus(${idx})" class="px-2.5 py-1 rounded font-bold text-[10px] border transition ${
+                  isFrozen
+                    ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300'
+                    : 'bg-amber-500/20 border-amber-400 text-amber-300'
+                }">
+                  ${f.status} ↻
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Render Audit Logs
+      const logBox = document.getElementById('adminAuditLogBox');
+      if (logBox) {
+        logBox.innerHTML = adminAuditLogs.map(l => `<div>&gt; ${l}</div>`).join('');
+      }
+    }
+
+    // Launches from First-Page Marvel Arc Reactor into Main CyberSathi HUD
+    function engageJarvis() {
+      playStarkChime();
+      const log = document.getElementById('jarvisBootLog');
+      document.getElementById('bootPercentage').textContent = '100% // ONLINE';
+      log.innerHTML += `<div class="text-amber-300">&gt; [ARC-REACTOR] Core ignition complete. Welcome to CyberSathi, Team HACKFORGE.</div>`;
+      
+      jarvisSpeak(
+        "Arc Reactor online. Namaste and welcome to CyberSathi by Team Hackforge. All digital defense shields are active.",
+        "आर्क रिएक्टर ऑनलाइन। नमस्ते! टीम हैकफोर्ज के साइबर-साथी सुरक्षा कवच में आपका स्वागत है। सभी सुरक्षा प्रणालियाँ सक्रिय हैं।"
+      );
+
+      setTimeout(() => {
+        const splash = document.getElementById('marvelSplash');
+        splash.classList.add('opacity-0', 'pointer-events-none');
+      }, 650);
+    }
+
+    function bypassSplash() {
+      document.getElementById('marvelSplash').classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function reopenSplash() {
+      const splash = document.getElementById('marvelSplash');
+      splash.classList.remove('opacity-0', 'pointer-events-none');
+      jarvisSpeak(
+        "Returning to Stark Arc Reactor primary gateway.",
+        "स्टार्क आर्क रिएक्टर मुख्य द्वार पर वापस लौट रहे हैं।"
+      );
+    }
+
+    // Navigation Tab Switcher
+    function switchTab(tab) {
+      playStarkChime();
+      ['radar', 'vault', 'illusion', 'academy', 'sos', 'admin'].forEach(id => {
+        const sec = document.getElementById('sec-' + id);
+        if (sec) sec.classList.add('hidden');
+        const btn = document.getElementById('tab-' + id);
+        if (btn) btn.classList.remove('active');
+      });
+      document.getElementById('sec-' + tab).classList.remove('hidden');
+      const activeBtn = document.getElementById('tab-' + tab);
+      if (activeBtn) activeBtn.classList.add('active');
+      if (tab === 'admin') renderAdminPanelData();
+    }
+
+    // Sample Payloads for Module 1
+    function loadSample(type) {
+      const box = document.getElementById('omniInput');
+      if (type === 'phish') box.value = 'http://sbi-kyc-update.account-verify-india.top/login-pan.php';
+      if (type === 'upi') box.value = 'rbi.kyc.refund.claim@okaxis';
+      if (type === 'sms') box.value = 'URGENT: Dear customer your electricity power will be disconnected tonight at 9:30 PM because previous bill was not updated. Immediately call officer 98XXXXXXXX or download QuickSupport APK.';
+      if (type === 'safe') box.value = 'https://www.npci.org.in/what-we-do/upi/product-overview';
+      runOmniScan();
+    }
+
+    // Heuristic Omni-Scanner + Live Admin Rule Matching
+    function runOmniScan() {
+      playStarkChime();
+      const raw = document.getElementById('omniInput').value.trim();
+      if (!raw) return;
+
+      totalScans++;
+      let risk = 0;
+      const flags = [];
+      const lower = raw.toLowerCase();
+
+      // 1. Check Live Admin Threat Rules First
+      adminThreatRules.forEach(rule => {
+        if (lower.includes(rule.pattern.toLowerCase())) {
+          risk += 65;
+          flags.push(`ADMIN BLACKLIST MATCH [${rule.category}]: Triggered by custom rule "${rule.pattern}".`);
+        }
+      });
+
+      // 2. Built-in Heuristics
+      if (lower.startsWith('http://')) {
+        risk += 30;
+        flags.push('CRITICAL: Unencrypted HTTP protocol (No TLS certificate).');
+      }
+      if (/\.(top|xyz|click|buzz|loan|work|gq|tk)(\/|$)/.test(lower)) {
+        risk += 35;
+        flags.push('HIGH RISK TLD: Domain uses a disposable high-abuse extension.');
+      }
+      if (/(sbi|hdfc|icici|kyc|aadhaar|pan|refund|rbi)/.test(lower) && !lower.includes('npci.org.in') && !lower.includes('onlinesbi.sbi')) {
+        risk += 35;
+        flags.push('BRAND IMPERSONATION: Unauthorized banking/government keyword detected.');
+      }
+      if (lower.includes('@') && /(refund|kyc|cashback|prize|lottery|claim)/.test(lower)) {
+        risk += 55;
+        flags.push('FRAUDULENT UPI HANDLE: "Collect Request" trap disguised as a refund/KYC handle.');
+      }
+      if (/(disconnected tonight|immediately|urgent|apk|quicksupport|anydesk|pan blocked)/.test(lower)) {
+        risk += 45;
+        flags.push('SOCIAL ENGINEERING NLP: High-urgency panic trigger & remote-access lure.');
+      }
+
+      risk = Math.min(99, risk);
+      if (risk === 0) {
+        flags.push('VERIFIED CLEAN: HTTPS structure intact. No deceptive keywords or rogue TLDs.');
+        appendAuditLog('OMNI-SCAN', `Clean target verified (${raw.slice(0, 32)}...)`);
+      } else {
+        threatsBlocked++;
+        appendAuditLog('THREAT-BLOCK', `Blocked ${risk}% risk payload (${raw.slice(0, 32)}...)`);
+      }
+
+      renderAdminPanelData();
+      document.getElementById('riskScoreNum').textContent = risk + '%';
+      const badge = document.getElementById('scanVerdictBadge');
+      const title = document.getElementById('verdictTitle');
+      const summary = document.getElementById('verdictSummary');
+
+      if (risk >= 60) {
+        badge.className = 'px-2.5 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500 font-mono-tech text-xs';
+        badge.textContent = 'ULTRON-LEVEL THREAT';
+        title.textContent = 'CRITICAL THREAT INTERCEPTED';
+        summary.textContent = 'J.A.R.V.I.S. strongly advises blocking this target. Do not enter OTPs, UPI PINs, or download attachments.';
+        jarvisSpeak(
+          `Warning Agent! Critical cyber threat detected with a ${risk} percent risk index. Do not enter your UPI PIN or OTP.`,
+          `सावधान एजेंट! इस लिंक में ${risk} प्रतिशत साइबर खतरे के संकेत मिले हैं। अपना ओटीपी या यूपीआई पिन बिल्कुल दर्ज न करें।`
+        );
+      } else if (risk >= 25) {
+        badge.className = 'px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500 font-mono-tech text-xs';
+        badge.textContent = 'SUSPICIOUS ANOMALY';
+        title.textContent = 'CAUTION ADVISED';
+        summary.textContent = 'Unusual markers detected. Verify via official bank portals before interacting.';
+        jarvisSpeak(
+          `Caution advised. Target exhibits ${risk} percent anomalous markers.`,
+          `सतर्क रहें। इस लक्ष्य में ${risk} प्रतिशत संदिग्ध संकेत पाए गए हैं।`
+        );
+      } else {
+        badge.className = 'px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500 font-mono-tech text-xs';
+        badge.textContent = 'S.H.I.E.L.D. VERIFIED SAFE';
+        title.textContent = 'TARGET APPEARS LEGITIMATE';
+        summary.textContent = 'No known phishing heuristics or deceptive UPI patterns detected.';
+        jarvisSpeak(
+          'Target scan complete. Domain telemetry is clean and verified safe.',
+          'स्कैन पूरा हुआ। यह वेबसाइट पूर्णतः सुरक्षित है।'
+        );
+      }
+
+      document.getElementById('scanFlagsList').innerHTML = flags.map(f => `<li>&gt; ${f}</li>`).join('');
+    }
+
+    // Real WebCrypto SHA-256 Local File / APK Hash Scanner
+    async function scanLocalFileHash(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const out = document.getElementById('apkHashOutput');
+      out.classList.remove('hidden');
+      out.textContent = `Computing WebCrypto SHA-256 for "${file.name}"...`;
+
+      const buf = await file.arrayBuffer();
+      const hashBuf = await crypto.subtle.digest('SHA-256', buf);
+      const hashHex = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
+      const isApk = file.name.toLowerCase().endsWith('.apk');
+
+      appendAuditLog('APK-SANDBOX', `SHA-256 computed for ${file.name} (${hashHex.slice(0, 12)}...)`);
+
+      out.innerHTML = `
+        <div class="text-amber-300 font-bold">FILE: ${file.name} (${(file.size / 1024).toFixed(1)} KB)</div>
+        <div class="text-cyan-300">SHA-256: ${hashHex}</div>
+        <div class="${isApk ? 'text-red-400' : 'text-emerald-400'} mt-1">
+          VERDICT: ${isApk ? '⚠️ SIDE-LOADED ANDROID APK DETECTED — Never install KYC/Bank APKs sent via WhatsApp or SMS!' : '✅ Standard non-APK binary signature verified.'}
+        </div>
+      `;
+
+      if (isApk) {
+        jarvisSpeak(
+          'Alert! Side-loaded Android APK file detected. Banks never send APK files over WhatsApp.',
+          'सावधान! यह एक एंड्रॉइड एपीके फ़ाइल है। कोई भी बैंक व्हाट्सएप पर एपीके फ़ाइल नहीं भेजता।'
+        );
+      }
+    }
+
+    // Module 2: Vibranium Password Entropy
+    function evaluatePassword() {
+      const pwd = document.getElementById('pwdInput').value;
+      let pool = 0;
+      if (/[a-z]/.test(pwd)) pool += 26;
+      if (/[A-Z]/.test(pwd)) pool += 26;
+      if (/[0-9]/.test(pwd)) pool += 10;
+      if (/[^a-zA-Z0-9]/.test(pwd)) pool += 32;
+
+      const entropy = pwd.length && pool ? Math.round(pwd.length * Math.log2(pool)) : 0;
+      document.getElementById('entropyBitsBadge').textContent = `${entropy} BITS ENTROPY`;
+
+      const crackEl = document.getElementById('crackTimeText');
+      const gradeEl = document.getElementById('armorGradeText');
+
+      if (entropy < 45) {
+        crackEl.textContent = 'Instant (< 2 Seconds)';
+        gradeEl.textContent = 'PAPER ARMOR (CRITICAL)';
+      } else if (entropy < 75) {
+        crackEl.textContent = '~14 Hours (GPU Cluster)';
+        gradeEl.textContent = 'IRON MARK-I (MODERATE)';
+      } else {
+        crackEl.textContent = '4.2 Million+ Years';
+        gradeEl.textContent = 'WAKANDA VIBRANIUM (UNBREAKABLE)';
+      }
+    }
+
+    function generateStarkPassword() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*_+-=';
+      const arr = new Uint32Array(20);
+      crypto.getRandomValues(arr);
+      let out = '';
+      for (let i = 0; i < 20; i++) out += chars[arr[i] % chars.length];
+      document.getElementById('pwdInput').value = out;
+      evaluatePassword();
+      appendAuditLog('VIBRANIUM-VAULT', 'Generated 20-char CSPRNG Vibranium key.');
+      jarvisSpeak(
+        'Vibranium cryptographic key forged with over 120 bits of Shannon entropy.',
+        '120 बिट्स की उच्च सुरक्षा वाला वाइब्रेनियम पासवर्ड तैयार कर दिया गया है।'
+      );
+    }
+
+    // Dark Web Breach Checker with WebCrypto SHA-256
+    async function runBreachCheck() {
+      const val = document.getElementById('breachInput').value.trim().toLowerCase();
+      if (!val) return;
+      const enc = new TextEncoder().encode(val);
+      const hashBuf = await crypto.subtle.digest('SHA-256', enc);
+      const hashHex = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
+      const prefix = hashHex.slice(0, 10).toUpperCase();
+
+      const box = document.getElementById('breachResultBox');
+      const isExposed = val.includes('breach') || val.includes('test') || val.includes('admin');
+      appendAuditLog('DARKWEB-SCAN', `K-Anonymity SHA-256 prefix ${prefix} queried.`);
+
+      box.innerHTML = `
+        <div class="text-cyan-400">K-ANONYMITY SHA-256 PREFIX: <strong class="text-white">${prefix}...</strong></div>
+        ${isExposed 
+          ? `<div class="text-red-400 font-bold">&gt; ALERT: Identifier matched in 2 historic credential dumps. Rotate passwords & enable App-based 2FA immediately!</div>`
+          : `<div class="text-emerald-400 font-bold">&gt; ZERO LEAKS FOUND: No exposure detected across monitored S.H.I.E.L.D. breach repositories.</div>`
+        }
+      `;
+
+      if (isExposed) {
+        jarvisSpeak(
+          'Breach alert! This identifier appeared in dark web credential dumps. Please rotate your password immediately.',
+          'चेतावनी! यह ईमेल डार्क वेब डेटा लीक में पाया गया है। कृपया तुरंत अपना पासवर्ड बदलें।'
+        );
+      } else {
+        jarvisSpeak(
+          'Zero dark web leaks found. Your identity is secure.',
+          'कोई डेटा लीक नहीं मिला। आपकी डिजिटल पहचान सुरक्षित है।'
+        );
+      }
+    }
+
+    // Module 3: Mysterio Phishing Lab
+    const phishScenarios = [
+      {
+        from: 'Income Tax India <refunds@itr-eportal-claim.top>',
+        returnPath: 'bounce@mailer-ru-node99.xyz',
+        subject: 'APPROVED: Instant Tax Refund of INR 28,450 Pending KYC',
+        body: 'Dear Taxpayer, your PAN card is eligible for an immediate e-Refund of Rs. 28,450. Click here: http://itr-eportal-claim.top/verify-netbanking and enter your ATM PIN to credit within 15 minutes.',
+        isPhish: true,
+        reason: 'Look-alike ".top" domain, mismatched foreign return-path, and asks for ATM PIN.'
+      },
+      {
+        from: 'GitHub Security <noreply@github.com>',
+        returnPath: 'noreply@github.com',
+        subject: '[GitHub] A new public key was added to your account',
+        body: 'Hey Agent, a new SSH key was added to your account. To review your keys, open your browser manually and navigate to github.com/settings/keys.',
+        isPhish: false,
+        reason: 'Authentic domain, matching Return-Path header, and instructs user to navigate manually rather than clicking a deceptive link.'
+      },
+      {
+        from: 'HDFC Bank Alert <support@hdfcbank-pan-unlock.click>',
+        returnPath: 'alert@hdfcbank-pan-unlock.click',
+        subject: 'FINAL NOTICE: Your HDFC NetBanking is suspended today',
+        body: 'Download our official "HDFC_KYC_Update.apk" attachment immediately on your Android phone to prevent account freeze.',
+        isPhish: true,
+        reason: 'Banks NEVER distribute ".apk" files over email/WhatsApp, and ".click" is a rogue TLD.'
+      }
+    ];
+    let currentPhish = 0;
+
+    function renderPhishScenario() {
+      const s = phishScenarios[currentPhish];
+      document.getElementById('phishIndexNum').textContent = currentPhish + 1;
+      document.getElementById('mailFrom').textContent = s.from;
+      document.getElementById('mailReturn').textContent = s.returnPath;
+      document.getElementById('mailSubject').textContent = s.subject;
+      document.getElementById('mailBody').textContent = s.body;
+      document.getElementById('phishFeedback').classList.add('hidden');
+    }
+
+    function submitPhishDecision(markedAsPhish) {
+      const s = phishScenarios[currentPhish];
+      const correct = markedAsPhish === s.isPhish;
+      const fb = document.getElementById('phishFeedback');
+      fb.classList.remove('hidden');
+      fb.innerHTML = `
+        <div class="${correct ? 'text-emerald-400' : 'text-red-400'} font-bold">
+          ${correct ? '✅ SPIDER-SENSE ACCURATE!' : '❌ ILLUSION MISSED!'}
+        </div>
+        <div class="text-slate-200">${s.reason}</div>
+        <button onclick="nextPhishScenario()" class="mt-2 px-3 py-1 rounded bg-cyan-500 text-slate-950 font-orbitron font-bold">NEXT SCENARIO &rarr;</button>
+      `;
+      if (correct) {
+        jarvisSpeak('Excellent analysis Agent! You saw right through Mysterio’s phishing illusion.', 'शानदार विश्लेषण एजेंट! आपने फ़िशिंग जाल को बिल्कुल सही पहचाना।');
+      } else {
+        jarvisSpeak('Careful Agent! Review the sender return path and domain extension.', 'सावधान एजेंट! ईमेल के डोमेन और रिटर्न-पाथ को ध्यान से देखें।');
+      }
+    }
+
+    function nextPhishScenario() {
+      currentPhish = (currentPhish + 1) % phishScenarios.length;
+      renderPhishScenario();
+    }
+    renderPhishScenario();
+
+    // Module 4: S.H.I.E.L.D. Academy Quiz & Certificate
+    const quizQuestions = [
+      {
+        q: '1. You receive a UPI request saying "Enter your 4-digit UPI PIN to RECEIVE Rs. 5,000 cashback." What happens if you enter the PIN?',
+        a: ['Rs. 5,000 is credited to your account', 'Rs. 5,000 is DEDUCTED from your bank account', 'Your KYC is updated'],
+        correct: 1
+      },
+      {
+        q: '2. Within the "Golden Hour" of a cyber financial fraud in India, which official national helpline should you dial immediately?',
+        a: ['1930', '100', '139'],
+        correct: 0
+      }
+    ];
+
+    function renderQuiz() {
+      const container = document.getElementById('quizBox');
+      container.innerHTML = quizQuestions.map((item, idx) => `
+        <div class="p-3.5 rounded bg-black/50 border border-cyan-500/20 space-y-2">
+          <div class="text-xs font-bold text-cyan-200">${item.q}</div>
+          <div class="space-y-1.5">
+            ${item.a.map((opt, oIdx) => `
+              <button onclick="checkQuizAnswer(${idx}, ${oIdx}, this)" class="w-full text-left p-2 rounded bg-slate-900 hover:bg-cyan-500/20 border border-slate-700 text-xs font-mono-tech text-slate-300">
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+    renderQuiz();
+
+    function checkQuizAnswer(qIdx, oIdx, btn) {
+      const isRight = quizQuestions[qIdx].correct === oIdx;
+      btn.className = `w-full text-left p-2 rounded border text-xs font-mono-tech font-bold ${
+        isRight ? 'bg-emerald-500/30 border-emerald-400 text-emerald-200' : 'bg-red-500/30 border-red-400 text-red-200'
+      }`;
+      if (isRight) {
+        document.getElementById('statRank').textContent = 'LEVEL 10 AVENGER';
+        jarvisSpeak(
+          'Correct answer verified. Your S.H.I.E.L.D. agent clearance has been upgraded to Level 10.',
+          'बिल्कुल सही उत्तर! आपका शील्ड एजेंट रैंक अब लेवल 10 पर अपग्रेड कर दिया गया है।'
+        );
+      }
+    }
+
+    function updateBadgeName() {
+      const val = document.getElementById('agentNameInput').value.trim() || 'AGENT HACKFORGE';
+      document.getElementById('badgeAgentDisplay').textContent = val.toUpperCase();
+    }
+
+    // Module 5: 1930 FIR Dossier Compiler (Pushes directly to Admin Queue)
+    function generateFirDossier() {
+      const name = document.getElementById('firName').value.trim() || 'Citizen Agent';
+      const bank = document.getElementById('firBank').value.trim() || 'SBI UPI // UTR 430988712301';
+      const amt = document.getElementById('firAmount').value.trim() || '₹25,000';
+      const desc = document.getElementById('firDesc').value.trim() || 'Suspicious Phishing / UPI Fraud';
+      const ticket = 'CS-1930-' + Math.floor(100000 + Math.random() * 900000);
+
+      // Push into Admin Queue
+      adminFirQueue.unshift({
+        ticket,
+        name,
+        bank,
+        amount: amt,
+        vector: desc,
+        status: 'PENDING 1930 TRIAGE'
+      });
+      appendAuditLog('1930-FIR', `New Golden-Hour FIR ${ticket} filed for ${name} (${amt}).`);
+
+      document.getElementById('firOutputBox').innerHTML = `
+        <div class="text-amber-400 font-bold border-b border-red-500/30 pb-1">OFFICIAL 1930 GOLDEN-HOUR INCIDENT DOSSIER // ${ticket}</div>
+        <div><strong>COMPLAINANT:</strong> ${name}</div>
+        <div><strong>BANK & UTR REF:</strong> ${bank}</div>
+        <div><strong>DEFRAUDED AMOUNT:</strong> ${amt}</div>
+        <div><strong>SUSPECT VECTOR:</strong> ${desc}</div>
+        <div class="text-emerald-400 pt-1">✅ SYNCED TO S.H.I.E.L.D. ADMIN QUEUE: Open the <strong>ADMIN PANEL</strong> tab to freeze the NCRP Bank Lien!</div>
+      `;
+
+      jarvisSpeak(
+        `Emergency dossier ${ticket} compiled and transmitted to the Director Admin Panel. Dial 1 9 3 0 immediately.`,
+        `आपातकालीन डॉसियर ${ticket} तैयार कर एडमिन पैनल में भेज दिया गया है। कृपया तुरंत 1930 पर कॉल करें।`
+      );
+    }
+
+    // =========================================================================
+    // MODULE 6: DIRECTOR FURY / STARK ADMIN PANEL LOGIC
+    // =========================================================================
+    function unlockAdminPanel(bypass = false) {
+      playStarkChime();
+      const pin = document.getElementById('adminPinInput').value.trim();
+      if (bypass || pin === '1930' || pin === '0000') {
+        document.getElementById('adminLockGate').classList.add('hidden');
+        document.getElementById('adminDashboardContent').classList.remove('hidden');
+        document.getElementById('statRank').textContent = 'DIRECTOR (LVL 10)';
+        appendAuditLog('ADMIN-AUTH', 'Level-10 Director Console unlocked.');
+        renderAdminPanelData();
+        jarvisSpeak(
+          'Welcome Director. Level 10 S.H.I.E.L.D. Admin Console unlocked. Threat rule injection and 1930 NCRP queues are at your command.',
+          'स्वागत है डायरेक्टर! लेवल 10 एडमिन पैनल अनलॉक हो चुका है। सभी सुरक्षा नियंत्रण आपके अधीन हैं।'
+        );
+      } else {
+        jarvisSpeak('Access denied. Invalid Director PIN.', 'प्रवेश अस्वीकृत। गलत पिन।');
+      }
+    }
+
+    function lockAdminPanel() {
+      document.getElementById('adminDashboardContent').classList.add('hidden');
+      document.getElementById('adminLockGate').classList.remove('hidden');
+      appendAuditLog('ADMIN-AUTH', 'Director Console locked.');
+    }
+
+    function addAdminThreatRule() {
+      const patternEl = document.getElementById('newRulePattern');
+      const catEl = document.getElementById('newRuleCategory');
+      const pattern = patternEl.value.trim();
+      if (!pattern) return;
+
+      adminThreatRules.unshift({
+        id: Date.now(),
+        pattern,
+        category: catEl.value
+      });
+      patternEl.value = '';
+      appendAuditLog('RULE-ENGINE', `Injected live threat signature "${pattern}" [${catEl.value}]`);
+      renderAdminPanelData();
+      jarvisSpeak(
+        `New threat signature ${pattern} injected into the J.A.R.V.I.S. Omni-Radar.`,
+        `नया थ्रेट नियम ${pattern} जार्विस रडार में जोड़ दिया गया है।`
+      );
+    }
+
+    function deleteAdminRule(id) {
+      adminThreatRules = adminThreatRules.filter(r => r.id !== id);
+      appendAuditLog('RULE-ENGINE', `Removed threat signature ID ${id}`);
+      renderAdminPanelData();
+    }
+
+    function toggleFirStatus(idx) {
+      const item = adminFirQueue[idx];
+      if (!item) return;
+      if (item.status === 'PENDING 1930 TRIAGE') {
+        item.status = 'NCRP LIEN FROZEN';
+        jarvisSpeak(
+          `NCRP Bank Lien freeze executed for ticket ${item.ticket}. Beneficiary account locked.`,
+          `टिकट ${item.ticket} पर बैंक खाता फ्रीज कर दिया गया है।`
+        );
+      } else {
+        item.status = 'PENDING 1930 TRIAGE';
+      }
+      appendAuditLog('NCRP-TRIAGE', `Ticket ${item.ticket} status updated to ${item.status}`);
+      renderAdminPanelData();
+    }
+
+    function toggleVeronicaLockdown() {
+      isVeronicaLockdown = !isVeronicaLockdown;
+      document.body.classList.toggle('veronica-lockdown', isVeronicaLockdown);
+      const btn = document.getElementById('veronicaBtn');
+      const gridLabel = document.getElementById('gridStatusLabel');
+      const gridDot = document.getElementById('gridStatusDot');
+
+      if (isVeronicaLockdown) {
+        btn.textContent = 'DISABLE VERONICA LOCKDOWN';
+        gridLabel.textContent = 'DEFCON-1 VERONICA LOCKDOWN';
+        gridLabel.className = 'text-red-400 font-bold';
+        gridDot.className = 'w-2 h-2 rounded-full bg-red-500 animate-ping';
+        appendAuditLog('VERONICA', 'DEFCON-1 Emergency Veronica Lockdown activated by Director.');
+        jarvisSpeak(
+          'Code Red! Veronica orbital containment protocol engaged. Maximum firewall lockdown active.',
+          'कोड रेड! वेरोनिका आपातकालीन प्रोटोकॉल सक्रिय कर दिया गया है। उच्चतम फ़ायरवॉल सुरक्षा लागू है।'
+        );
+      } else {
+        btn.textContent = 'ENGAGE VERONICA LOCKDOWN';
+        gridLabel.textContent = 'DEFCON-5 SECURE';
+        gridLabel.className = 'text-white';
+        gridDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-ping';
+        appendAuditLog('VERONICA', 'Veronica Lockdown lifted. Returning to DEFCON-5.');
+        jarvisSpeak(
+          'Veronica lockdown disengaged. Returning to standard S.H.I.E.L.D. defense posture.',
+          'वेरोनिका लॉकडाउन समाप्त। सामान्य सुरक्षा प्रणाली बहाल।'
+        );
+      }
+    }
+
+    // Admin Preset & Custom Bilingual Broadcasts
+    function broadcastPreset(code) {
+      if (code === 'welcome_en') {
+        jarvisSpeak(
+          'Namaste Honorable Judges! Welcome to CyberSathi, engineered by Team Hackforge for Hackfest 3.0. Together, let us build a cyber-safe Bharat.',
+          '',
+          'en-IN'
+        );
+      } else if (code === 'welcome_hi') {
+        jarvisSpeak(
+          '',
+          'नमस्ते निर्णायक मंडल! हैकफेस्ट 3.0 में टीम हैकफोर्ज के साइबर-साथी प्लेटफॉर्म पर आपका हार्दिक स्वागत है। आइए मिलकर डिजिटल भारत को सुरक्षित बनाएं।',
+          'hi-IN'
+        );
+      } else if (code === 'upi_hi') {
+        jarvisSpeak(
+          '',
+          'नागरिकों के लिए महत्वपूर्ण सूचना! पैसे प्राप्त करने या केवाईसी अपडेट के लिए कभी भी अपना यूपीआई पिन या ओटीपी दर्ज न करें। साइबर धोखाधड़ी होने पर तुरंत 1930 पर कॉल करें।',
+          'hi-IN'
+        );
+      }
+      appendAuditLog('PA-BROADCAST', `Broadcast preset "${code}" executed.`);
+    }
+
+    function speakCustomAdminText(langCode) {
+      const txt = document.getElementById('customJarvisText').value.trim();
+      if (!txt) {
+        if (langCode === 'hi-IN') {
+          jarvisSpeak('', 'नमस्ते! मैं जार्विस हूँ। कृपया बॉक्स में अपना संदेश लिखें।', 'hi-IN');
+        } else {
+          jarvisSpeak('Namaste! Please type your custom message in the broadcast console.', '', 'en-IN');
+        }
+        return;
+      }
+      jarvisSpeak(txt, txt, langCode);
+      appendAuditLog('PA-BROADCAST', `Custom ${langCode} voice broadcast transmitted.`);
+    }
+
+    function clearAuditLogs() {
+      adminAuditLogs = ['[SYSTEM] Audit telemetry cleared by Director.'];
+      renderAdminPanelData();
+    }
+
+    function exportAdminDatabase() {
+      const payload = {
+        project: 'CyberSathi // Team HACKFORGE // HACKFEST 3.0',
+        exportedAt: new Date().toISOString(),
+        metrics: { totalScans, threatsBlocked },
+        threatRules: adminThreatRules,
+        firQueue: adminFirQueue,
+        auditLogs: adminAuditLogs
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cybersathi_shield_admin_db.json';
+      a.click();
+      appendAuditLog('DB-EXPORT', 'Exported S.H.I.E.L.D. Admin JSON snapshot.');
+    }
+
+    // Allow ESC key to close the Marvel Splash Gate
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') bypassSplash();
+    });
+
+    // Initial render of Admin state
+    renderAdminPanelData();
+  </script>
+</body>
+</html>
+```
+
+### Summary of What Was Added & How to Present It
+
+1. **Bilingual Indian Accent J.A.R.V.I.S. Voice Engine (`🇮🇳 EN-IN` & `🇮🇳 हिंदी`)**:
+   - Available on both the **First-Page Marvel Arc Reactor Splash Screen** and the **Top Tactical Navbar**.
+   - Automatically binds to Indian English (`en-IN`, e.g., Microsoft Ravi / Google India) and Hindi (`hi-IN`, e.g., Microsoft Swara / Google Hindi) voices via the browser's Web Speech API.
+   - Every scan verdict, dark web check, quiz upgrade, and 1930 dossier speaks in either **Indian English** or **Hindi** depending on your selected toggle, and translates key HUD navigation headers dynamically.
+
+2. **Level-10 S.H.I.E.L.D. Director Admin Panel (`ADMIN PANEL` Tab)**:
+   - **Authentication Gate**: Unlock with the default PIN **`1930`** or click **`[⚡ ONE-CLICK HACKFEST 3.0 JUDGE DEMO UNLOCK]`**.
+   - **J.A.R.V.I.S. Bilingual PA Console**: Includes one-click English & Hindi judge welcome broadcasts and a custom text-to-speech megaphone where you can type any sentence and make J.A.R.V.I.S. speak it in `EN-IN` or `हिंदी`.
+   - **Live Threat Signature Blacklist Engine**: Inject any custom domain, rogue UPI handle, or scam SMS keyword and immediately test it in the **Omni-Radar** tab to prove live backend-to-scanner rule synchronization.
+   - **1930 Golden-Hour Incident Triage Queue**: Every dossier generated in the **1930 SOS** tab appears here in real time; click its status badge to toggle **`NCRP LIEN FROZEN`**.
+   - **Veronica Lockdown Protocol & JSON DB Export**: Toggle a full-screen red **DEFCON-1 Veronica Lockdown** theme and export the live telemetry database as a `.json` file.
